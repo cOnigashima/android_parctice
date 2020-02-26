@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                    { Toast.makeText(this@MainActivity, "保存しました", Toast.LENGTH_LONG).show()},
+                    {   Log.d("subscribe","success")
+                        Toast.makeText(this@MainActivity, "保存しました", Toast.LENGTH_LONG).show()},
                     {
                         Toast.makeText(
                             this@MainActivity,
