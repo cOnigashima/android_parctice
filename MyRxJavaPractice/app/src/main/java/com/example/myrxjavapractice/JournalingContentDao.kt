@@ -3,6 +3,7 @@ package com.example.myrxjavapractice
 
 import androidx.room.*
 import io.reactivex.Completable
+import io.reactivex.Single
 
 @Dao
 interface JournalingContentDao{
@@ -11,10 +12,11 @@ interface JournalingContentDao{
     fun save(JournalingContent: JournalingContent) : Completable
 
     @Query("SELECT * FROM JournalingContent")
-    fun getAll(): List<JournalingContent>
+    // fun getAll(): Observable<List<JournalingContent>> これ、observableじゃなくて良くない？
+    fun getAll(): Single<List<JournalingContent>>
 
     @Query("SELECT * FROM JournalingContent WHERE journalingContentId = :JournalingContentId")
-    fun getOneById(JournalingContentId : Int): JournalingContent
+    fun findById(JournalingContentId : Int): JournalingContent
 
     @Update
     fun update(JournalingContent: JournalingContent)

@@ -1,5 +1,6 @@
 package com.example.myrxjavapractice
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,9 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
 import io.reactivex.schedulers.Schedulers
@@ -35,9 +34,14 @@ class MainActivity : AppCompatActivity() {
                 startCountDown()
         }
 
+        findViewById<Button>(R.id.back_from_content_detail_button).
+            setOnClickListener {
+              startActivity(Intent(this,JournalingContentLIstActivity::class.java))
+            }
+
         findViewById<Button>(R.id.content_save_button).setOnClickListener {
             val inputTitleText =
-                findViewById<TextView>(R.id.content_title_journaling).text.toString()
+                findViewById<TextView>(R.id.journaling_content_title).text.toString()
             val inputEditText = findViewById<EditText>(R.id.journaling_content_text).text.toString()
             val df = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPANESE)
             val date = Date()
@@ -88,6 +92,7 @@ class MainActivity : AppCompatActivity() {
                 //timerDisplay.text = ((it/60).toString() + " : " + (it%60).toString())
                 // format("" , intかLongじゃないとダメ。多分Long , )
                 // はぁ、楽しかった。。。
+                //　ここは、onNextでござる。
                 timerDisplay.text = String.format( " %02d : %02d ",(it/60),(it%60))
 
                 // TimeUnit.SECONDS.toMinutes(
@@ -97,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-//                     Javaの場合。これで一生頑張っていた
+//                     Javaの場合。これで一生頑張っていた、JavaだったらこれでOK。
 //                     new Observer<Long>() {
 //                    @Override
 //                    public void onSubscribe(Disposable d) {

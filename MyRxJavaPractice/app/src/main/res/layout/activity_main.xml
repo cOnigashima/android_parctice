@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/content_title_journaling"
+        android:id="@+id/journaling_content_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="お題がここに入ります!" />
@@ -44,7 +44,7 @@
         android:gravity="center">
 
         <Button
-            android:id="@+id/back_button"
+            android:id="@+id/back_from_content_detail_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="戻る" />
