@@ -8,8 +8,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Function
@@ -25,7 +25,10 @@ class MainActivity : AppCompatActivity() {
         const val TEN_MINUTE = 600
     }
 
+    var mContentId :Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -40,30 +43,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         findViewById<Button>(R.id.content_save_button).setOnClickListener {
-            val inputTitleText =
-                findViewById<TextView>(R.id.journaling_content_title).text.toString()
-            val inputEditText = findViewById<EditText>(R.id.journaling_content_text).text.toString()
-            val df = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPANESE)
-            val date = Date()
-
-            val completable: Completable =
-                AppDatabaseSingleton.getDatabase(this@MainActivity).contentDao().save(
-                    JournalingContent(1, inputTitleText, inputEditText, df.format(date))
-                )
-            completable
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                    {   Log.d("subscribe","success")
-                        Toast.makeText(this@MainActivity, "保存しました", Toast.LENGTH_LONG).show()},
-                    {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "何かしらエラーが起きました" + it.message,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                )
+                saveContent()
         }
     }
 
@@ -93,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 // format("" , intかLongじゃないとダメ。多分Long , )
                 // はぁ、楽しかった。。。
                 //　ここは、onNextでござる。
-                timerDisplay.text = String.format( " %02d : %02d ",(it/60),(it%60))
+                timerDisplay.text = String.format(" %02d : %02d ", (it / 60), (it % 60))
 
                 // TimeUnit.SECONDS.toMinutes(
                 // onCompleteとかはないから？ってとやろう？？
@@ -126,5 +106,35 @@ class MainActivity : AppCompatActivity() {
 //                });
 
 
+    }
+
+    fun saveContent(){
+        val inputTitleText = findViewById<TextView>(R.id.journaling_content_title).text.toString()
+        val inputEditText = findViewById<EditText>(R.id.journaling_content_text).text.toString()
+        val df = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.JAPANESE)
+        val date = Date()
+
+        val single: Single<Long> =
+            AppDatabaseSingleton.getDatabase(this@MainActivity).contentDao().save(
+                JournalingContent(mContentId.toInt(), inputTitleText, inputEditText, df.format(date))
+            )
+
+        val d: Disposable = single
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    Log.d("subscribe", "success")
+                    Toast.makeText(this@MainActivity, "保存しました", Toast.LENGTH_LONG).show()
+                    mContentId = it
+                },
+                {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "何かしらエラーが起きました" + it.message,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            )
     }
 }

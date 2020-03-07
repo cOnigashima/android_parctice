@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.persistableBundleOf
 import androidx.recyclerview.widget.RecyclerView
 
 
-class JournalingContentsListAdapter(private val context: Context, private val journalingList: List<JournalingContent>) :
+class JournalingContentsListAdapter(private val context: Context, private val journalingList: MutableList<JournalingContent>) :
     RecyclerView.Adapter<JournalingContentsListAdapter.JournalingContentViewHolder>() {
 
     class JournalingContentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -25,4 +26,14 @@ class JournalingContentsListAdapter(private val context: Context, private val jo
         holder.dateTextView.text = journalingList[position].createDate
         holder.contentTitleTextView.text = journalingList[position].jornalingContentTitle
     }
+
+    fun getContentId(position: Int): Int {
+        return journalingList.get(position).journalingContentId
+    }
+
+    fun removeItem(position: Int){
+        journalingList.remove(journalingList.get(position))
+    }
+
+
 }
