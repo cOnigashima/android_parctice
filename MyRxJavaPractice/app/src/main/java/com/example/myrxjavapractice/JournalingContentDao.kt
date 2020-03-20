@@ -16,7 +16,7 @@ interface JournalingContentDao{
     fun getAll(): Single<MutableList<JournalingContent>>
 
     @Query("SELECT * FROM JournalingContent WHERE journalingContentId = :JournalingContentId")
-    fun findById(JournalingContentId : Int): JournalingContent
+    fun findById(JournalingContentId : Int): Single<JournalingContent>
 
     @Update
     fun update(JournalingContent: JournalingContent)

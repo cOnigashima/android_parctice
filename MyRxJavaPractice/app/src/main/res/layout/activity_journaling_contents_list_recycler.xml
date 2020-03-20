@@ -13,7 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/create_new_journaling_content_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -24,7 +24,7 @@
         android:src="@drawable/quill_pen_with_frame_icon"
         android:foregroundGravity="center"
         android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/journaling_list_container_recycler_view"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 

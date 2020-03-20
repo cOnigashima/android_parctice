@@ -2,15 +2,17 @@ package com.example.myrxjavapractice
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.myrxjavapractice.JournalingContentsDisplayActivity.Companion.KEY_CONTENT_ID
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_journaling_contents_list_recycler.*
 
 class JournalingContentLIstActivity : AppCompatActivity() {
 
@@ -19,22 +21,26 @@ class JournalingContentLIstActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_journaling_contents_list_recycler)
 
-        val recyclerView: RecyclerView = findViewById<RecyclerView>(R.id.journaling_list_container_recycler_view)
+        val recyclerView: RecyclerView = findViewById(R.id.journaling_list_container_recycler_view)
 
-        var d : Disposable = AppDatabaseSingleton.getDatabase(this).contentDao().getAll()
+        var d: Disposable = AppDatabaseSingleton.getDatabase(this).contentDao().getAll()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     Toast.makeText(this, "拾ってきたよ", Toast.LENGTH_SHORT).show()
-
+                    it.reverse()
                     //RecyclerViewにAdapterとLayoutManagerを設定
-                  recyclerView.also { recyclerView: RecyclerView ->
-                            recyclerView.adapter = JournalingContentsListAdapter(this, it )
-                            recyclerView.layoutManager = LinearLayoutManager(this)
-                        }                }
-                ,{
-                Toast.makeText(this, "エラーだよ", Toast.LENGTH_LONG).show()
+                    recyclerView.also { recyclerView: RecyclerView ->
+
+                        val adapter = JournalingContentsListAdapter(this, it)
+                        recyclerView.adapter = adapter
+                        recyclerView.layoutManager = LinearLayoutManager(this)
+                        setClickListenerJob(adapter)
+                    }
+                }
+                , {
+                    Toast.makeText(this, "エラーだよ", Toast.LENGTH_LONG).show()
                 })
 
 
@@ -53,7 +59,6 @@ class JournalingContentLIstActivity : AppCompatActivity() {
                     deleteContentItem(contentId)
                     (recyclerView.adapter as JournalingContentsListAdapter).removeItem(positon)
 
-                    // なぜか消せるけど、もどってしまう。why???
                     recyclerView.adapter?.notifyItemRemoved(positon)
                 }
             }
@@ -61,8 +66,8 @@ class JournalingContentLIstActivity : AppCompatActivity() {
         })
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-        findViewById<FloatingActionButton>(R.id.create_new_journaling_content_button).setOnClickListener{
-            startActivity(Intent(this,MainActivity::class.java))
+        create_new_journaling_content_button.setOnClickListener{
+            startActivity(Intent(this,JournalingContentEditActivity::class.java))
         }
     }
 
@@ -77,5 +82,16 @@ class JournalingContentLIstActivity : AppCompatActivity() {
                 {
                     Toast.makeText(this, "エラーだよ", Toast.LENGTH_SHORT).show()
                 })
+    }
+
+    fun setClickListenerJob(adapter: JournalingContentsListAdapter) {
+        adapter.setOnItemClickListener(object : JournalingContentsListAdapter.OnItemClickListener {
+            override fun onItemClickListener(view: View, position: Int, journalingContent: JournalingContent) {
+                startActivity(
+                    Intent(this@JournalingContentLIstActivity, JournalingContentsDisplayActivity::class.java
+                    ).putExtra(KEY_CONTENT_ID, journalingContent.journalingContentId)
+                )
+            }
+        })
     }
 }
