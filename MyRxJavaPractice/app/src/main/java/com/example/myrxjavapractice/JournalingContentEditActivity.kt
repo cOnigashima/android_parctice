@@ -82,47 +82,8 @@ class JournalingContentEditActivity : AppCompatActivity() {
             })
 
             .subscribe{
-                // もうKotlinがわからない
-                // itがいわゆるonNextで返される値。
-
-                // 分数で　format　
-                //　これformat使う方がええな。
-                //timerDisplay.text = ((it/60).toString() + " : " + (it%60).toString())
-                // format("" , intかLongじゃないとダメ。多分Long , )
-                // はぁ、楽しかった。。。
-                //　ここは、onNextでござる。
                 timerDisplay.text = String.format(" %02d : %02d ", (it / 60), (it % 60))
-
-                // TimeUnit.SECONDS.toMinutes(
-                // onCompleteとかはないから？ってとやろう？？
-                //TODO 0になったら、トーストを出して、停止する。
-                // 分数を選べるようにする。
             }
-
-
-//                     Javaの場合。これで一生頑張っていた、JavaだったらこれでOK。
-//                     new Observer<Long>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        disposable = d;
-//                    }
-//
-//                    @Override
-//                    public void onNext(Long aLong) {
-//                        onTick(aLong);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        onFinish();
-//                    }
-//                });
-
 
     }
 
