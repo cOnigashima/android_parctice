@@ -8,8 +8,14 @@ import androidx.databinding.BindingAdapter
 fun facialImage(view : ImageView, moodState: MoodStateViewModel.MoodState) {
 
     when(moodState) {
-        MoodStateViewModel.MoodState.BAD -> {
+        MoodStateViewModel.MoodState.VERY_BAD -> {
             view.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.sentiment_very_dissatisfied))
+        }
+        MoodStateViewModel.MoodState.BAD -> {
+            view.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.sentiment_dissatisfied))
+        }
+        MoodStateViewModel.MoodState.GOOD -> {
+            view.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.sentiment_satisfied))
         }
         else -> {
             view.setImageDrawable(ContextCompat.getDrawable(view.context, R.drawable.sentiment_very_satisfied))

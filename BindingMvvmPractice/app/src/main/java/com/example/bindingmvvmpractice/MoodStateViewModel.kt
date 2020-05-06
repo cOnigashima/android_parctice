@@ -37,12 +37,17 @@ class MoodStateViewModel : ViewModel() {
      * */
     val moodState : LiveData<MoodState> = Transformations.map(_seekBarValue){
         when{
-            it > 50 -> MoodState.GOOD
-            else -> MoodState.BAD
+            it < 25 -> MoodState.VERY_BAD
+            it < 50 -> MoodState.BAD
+            it < 75 -> MoodState.GOOD
+            else -> MoodState.VERY_GOOD
         }
     }
 
-    enum class MoodState {
-        BAD , GOOD
+    enum class MoodState(val moodName :String) {
+       VERY_BAD("very_bad"),
+        BAD ("bad"),
+        GOOD("good") ,
+        VERY_GOOD("very_good")
     }
 }
